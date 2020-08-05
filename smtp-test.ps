@@ -1,0 +1,27 @@
+while($true){
+    $sender = Read-Host "Enter email sender" 
+    if($sender -Like '*.kg'){
+        break
+    }
+}
+
+while($true){
+    $receiver = Read-Host "Enter email receiver"
+    if($receiver -Like '*.kg'){
+        break
+    }
+}
+
+$title = Read-Host 'Enter email title'
+$body = Read-Host 'Enter email body'
+$smtp_srv = Read-Host 'Enter smtp server'
+
+
+$connection_result = Test-NetConnection -ComputerName $smtp_srv -Port 25 | foreach {$_.TcpTestSucceeded}
+if($connection_result -eq 'True'){
+    Write-Host '[Ok!]' -ForegroundColor Green
+    Send-MailMessage -From $sender -to $receiver -Subject $title -Body $body -SmtpServer $smtp_srv
+}
+else{
+    Write-Host 'Failed connection to the server' -ForegroundColor Red
+}
